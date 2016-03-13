@@ -10,9 +10,7 @@
 -   По некоторым оценкам, к 2020 году количество устройств,     подключенных к сети Интернет может превысить 50 млрд.
 
 <div style="text-align:center" markdown="1">
-![Количество устройств, подключенных к сети Интернет](https://github.com/bmstu-hackathon/example/blob/gh-pages/assets/intro01.jpg?raw=true)
-
-**Прогноз количества устройств, подключенных к сети Интернет**
+![Прогноз количества устройств, подключенных к сети Интернет](https://github.com/bmstu-hackathon/example/blob/gh-pages/assets/intro01.jpg?raw=true)
 </div>
 
 -   Решения Интернета вещей основаны на сборе и анализе больших
