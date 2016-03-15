@@ -249,3 +249,5 @@ query <- idaQuery("INSERT INTO MIXED (\"PREDICTTEMP\",\"PREDICTANGLE\")  VALUES 
 
 
 
+
+
