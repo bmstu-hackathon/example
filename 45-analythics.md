@@ -171,9 +171,7 @@ CREATE TABLE "MIXED"
 
 Подробнее о работе с IDE RStudio можно узнать [тут](http://r-analytics.blogspot.ru/p/rstudio.html#.VuiE7x_fVNA)
 
-Выполним тестовый скрипт
-
-Вставить следующий скрипт:
+Выполним следующий скрипт (скрипт может быть вставлен в окно Console):
 
 ```R
 #подключение к dashDB
@@ -222,7 +220,7 @@ query <- idaQuery("INSERT INTO MIXED (\"PREDICTTEMP\",\"PREDICTANGLE\")  VALUES 
 
 
 ```json
-[{"id":"5dd674c.030d48c","type":"http in","z":"7f10a56e.5876ac","name":"","url":"/predict.R","method":"post","swaggerDoc":"","x":190,"y":1141,"wires":[["69516dd1.18e2a4"]]},{"id":"1d3ac371.e0f9c5","type":"http response","z":"7f10a56e.5876ac","name":"console","x":842,"y":1137,"wires":[]},{"id":"69516dd1.18e2a4","type":"function","z":"7f10a56e.5876ac","name":"","func":"msg.payload = \"cmd=RScriptRunScript&command=source(%22~/predict.R%22)&fileName=&profileName=BLUDB&userid=dash??????\";\nmsg.headers = {\"content-type\": \"application/x-www-form-urlencoded\"};\nreturn msg;","outputs":1,"noerr":0,"x":404,"y":1138,"wires":[["3831ecaa.377d34"]]},{"id":"3831ecaa.377d34","type":"http request","z":"7f10a56e.5876ac","name":"R Script","method":"POST","ret":"txt","url":"https://XXXXXXXXXXXXXXXX:8443/console/blushiftservices/BluShiftHttp.do","x":616,"y":1136,"wires":[["1d3ac371.e0f9c5","863a8702.7598a8"]]},{"id":"863a8702.7598a8","type":"debug","z":"7f10a56e.5876ac","name":"","active":true,"console":"false","complete":"false","x":959,"y":1084,"wires":[]},{"id":"e3ac94d.9075168","type":"inject","z":"7f10a56e.5876ac","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":190,"y":1067.5,"wires":[["69516dd1.18e2a4"]]}]
+[{"id":"5dd674c.030d48c","type":"http in","z":"7f10a56e.5876ac","name":"","url":"","method":"post","swaggerDoc":"","x":190,"y":1141,"wires":[["69516dd1.18e2a4"]]},{"id":"1d3ac371.e0f9c5","type":"http response","z":"7f10a56e.5876ac","name":"console","x":842,"y":1137,"wires":[]},{"id":"69516dd1.18e2a4","type":"function","z":"7f10a56e.5876ac","name":"","func":"msg.payload = \"cmd=RScriptRunScript&command=source(%22~/predict.R%22)&fileName=&profileName=BLUDB&userid=dash??????\";\nmsg.headers = {\"content-type\": \"application/x-www-form-urlencoded\"};\nreturn msg;","outputs":1,"noerr":0,"x":404,"y":1138,"wires":[["3831ecaa.377d34"]]},{"id":"3831ecaa.377d34","type":"http request","z":"7f10a56e.5876ac","name":"R Script","method":"POST","ret":"txt","url":"https://XXXXXXXXXXXXXXXX:8443/console/blushiftservices/BluShiftHttp.do","x":616,"y":1136,"wires":[["1d3ac371.e0f9c5","863a8702.7598a8"]]},{"id":"863a8702.7598a8","type":"debug","z":"7f10a56e.5876ac","name":"","active":true,"console":"false","complete":"false","x":959,"y":1084,"wires":[]},{"id":"e3ac94d.9075168","type":"inject","z":"7f10a56e.5876ac","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":190,"y":1067.5,"wires":[["69516dd1.18e2a4"]]}]
 ```
 
 В данном коде необходимо заменить следующие поля:
