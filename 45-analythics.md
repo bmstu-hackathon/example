@@ -218,17 +218,7 @@ query <- idaQuery("INSERT INTO MIXED (\"PREDICTTEMP\",\"PREDICTANGLE\")  VALUES 
 ###Запуск скрипта по расписанию из NodeRED
 
 
-
-В блоках Node-RED изменить все username (DASH??????), password и url.
-
-В блоке R Script изменить метод аутентификации на Use Basic authentification
-
-Ввести поля Username и Password из п.7.
-
-
 В редакторе NodeRed создайте следующий поток:
-
-
 
 
 ```json
@@ -236,15 +226,17 @@ query <- idaQuery("INSERT INTO MIXED (\"PREDICTTEMP\",\"PREDICTANGLE\")  VALUES 
 ```
 
 В данном коде необходимо заменить следующие поля:
+
 - dash?????? — User ID пользователя dashDB (например DASH015794)
+
 - XXXXXXXXXXXXXX — Host name адрес dashDB приложения (например awh-yp-small03.services.dal.bluemix.net).
 
-В блоке RScript необходимо указать значение password из настроек dashDB.
+В блоке RScript необходимо указать значение password из настроек dashDB. Регулярность запуск задается в блоке Timestamp.
 
 
-![Запуск скрипта по расписанию](assets/analythics10.png)
+![Запуск скрипта по расписанию](assets/analythics11.png)
 
-Регулярность запуск задается в блоке Timestamp.
+
 
 
 
