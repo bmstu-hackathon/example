@@ -46,7 +46,15 @@
 
 ![Консоль управления dashDB](assets/analythics04.png)
 
-Для работы с сервисом необходимо определить параметры: User ID, Host name, Password, Port number. Указанная информация доступна на владке Connect в пункте Connect Information. Указанная информация понадобится впоследствии. 
+Для работы с сервисом необходимо определить параметры: 
+
+* ***User ID***,
+ 
+* ***Host name***, 
+
+* ***Password***. 
+
+Указанная информация доступна на владке Connect в пункте Connect Information. Указанная информация понадобится впоследствии. 
 
 ![Параметры для подключения к сервису dashDB](assets/analythics05.png)
 
@@ -55,68 +63,70 @@
 
 На вкладке Tables объединены функции управления структурой базы данных. При создании сервиса автоматически создается новая база с именем, совпадающим в полем User ID (в примере: DASH105325).
 
-Добавим в базу две таблицы:
+Добавим в базу следующие таблицв таблицы:
 
-- Таблица SOURCE для хранения первичных данных от датчиков.
-- Таблица ANALYTHIC для хранения данных предиктивной аналитики.
-- Таблица MIXED для хранения первичных данных и предиктивной аналитики.
+- Таблицы ANGLE и TEMP для хранения первичных данных от датчиков угла и температуры.
+- Таблицы PANGLE и PTEMP для хранения предиктивных данных  для угла и температуры.
 
 Для этого необходимо выбрать пункт Add Table и в открывшемся окне ввести код DDL.
 
-Для создания таблицы SOURCE
-
 ```SQL
-CREATE TABLE "SOURCE" 
+CREATE TABLE "TEMP" 
 (
   "ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE ),
-  "TEMP" DOUBLE,
-  "ANGLE" DOUBLE,
-  "TS" TIMESTAMP,
+  "temp" DOUBLE,
+  "ts" TIMESTAMP,
   PRIMARY KEY(ID)
 );
 ```
 
-Для создания таблицы ANALYTHIC
 
 ```SQL
-CREATE TABLE "ANALYTHIC" 
+CREATE TABLE "ANGLE" 
 (
   "ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE ),
-  "PREDICTTEMP" DOUBLE,
-  "PREDICTANGLE" DOUBLE,
-  "TS" TIMESTAMP,
+  "angle" DOUBLE,
+  "ts" TIMESTAMP,
   PRIMARY KEY(ID)
 );
 ```
 
-Для создания таблицы MIXED
-
 ```SQL
-CREATE TABLE "MIXED" 
+CREATE TABLE "PTEMP" 
 (
   "ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE ),
-  "PREDICTTEMP" DOUBLE,
-  "PREDICTANGLE" DOUBLE,
-  "TEMP" DOUBLE,
-  "ANGLE" DOUBLE,
-  "TS" TIMESTAMP,
+  "ptemp" DOUBLE,
+  "ts" TIMESTAMP,
   PRIMARY KEY(ID)
 );
 ```
 
-Поле TS предусмотрено для хранения метки времени. 
-Ключевое поле ID содержит автоинкрементное значение номера записи (необходимо для отсчета значений в скриптах R и построения графиков). 
+
+```SQL
+CREATE TABLE "PANGLE" 
+(
+  "ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE ),
+  "pangle" DOUBLE,
+  "ts" TIMESTAMP,
+  PRIMARY KEY(ID)
+);
+```
+
+Поле TS во всех таблицах предусмотрено для хранения метки времени. Ключевое поле ID содержит автоинкрементное значение номера записи (данное поле необходимо для отсчета значений в скриптах R и построения графиков). 
 
 ####Запуск потоковой записи первичных данных.
 
 В приложении Node-Red необходимо связать блок IoT Foundation с функциональными блоким, формирующими структуру объекта payload, после чего прередать его в блок "dashDB out node". В блоке dashDB указать поле Service dashDB-xx (название сервиса dashDB).
 
 
+
+
+!!!!!!!!!!обновить
 ```json
 [{"id":"7562821a.8a9d7c","type":"ibmiot in","z":"464be866.b9b418","authentication":"quickstart","apiKey":"","inputType":"evt","deviceId":"93d7da18e689","applicationId":"","deviceType":"+","eventType":"+","commandType":"","format":"json","name":"IBM IoT App In","service":"quickstart","allDevices":false,"allApplications":false,"allDeviceTypes":true,"allEvents":true,"allCommands":false,"allFormats":false,"x":184,"y":320,"wires":[["410e7525.bef18c","522c279c.add3d8"]]},{"id":"410e7525.bef18c","type":"function","z":"464be866.b9b418","name":"iot_db","func":"var interval = (1000*5); // minimum interval between messages (ms)\ncontext.lastTime = context.lastTime || 0;\n\nvar now = Date.now();\n\nif (now-context.lastTime < interval) {\n  return null;\n} \nelse\n{\n    context.lastTime = now;\n    msg.payload =\n    {\n        TS : 'TIMESTAMP',\n        TEMP : msg.payload.d.temp,\n        ANGLE : msg.payload.d.angle\n    }\n    return msg;\n}\n","outputs":1,"noerr":0,"x":478,"y":256.5,"wires":[["46a5a421.b95a5c"]]},{"id":"46a5a421.b95a5c","type":"dashDB out","z":"464be866.b9b418","service":"dashDB-nx","table":"SOURCE","name":"SAVE SOURCE","x":714,"y":256,"wires":[]},{"id":"522c279c.add3d8","type":"function","z":"464be866.b9b418","name":"iot_db","func":"var interval = (1000*5); // minimum interval between messages (ms)\ncontext.lastTime = context.lastTime || 0;\n\nvar now = Date.now();\n\nif (now-context.lastTime < interval) {\n  return null;\n} \nelse\n{\n    context.lastTime = now;\n    msg.payload =\n    {\n        TS : 'TIMESTAMP',\n        TEMP : msg.payload.d.temp,\n        ANGLE : msg.payload.d.angle,\n        PREDICTTEMP : null,\n        PREDICTANGLE : null\n    }\n    return msg;\n}\n","outputs":1,"noerr":0,"x":474,"y":399,"wires":[["1b11131.fe4eeed"]]},{"id":"1b11131.fe4eeed","type":"dashDB out","z":"464be866.b9b418","service":"dashDB-nx","table":"MIXED","name":"SAVE MIXED","x":711,"y":399,"wires":[]},{"id":"250de2a4.daf21e","type":"comment","z":"464be866.b9b418","name":"Добавление данных в таблицу SOURCE","info":"Добавление данных в таблицу SOURCE","x":609,"y":221,"wires":[]},{"id":"b62334a4.49dcc8","type":"comment","z":"464be866.b9b418","name":"Добавление данных в таблицу MIXED","info":"Добавление данных в таблицу MIXED","x":603,"y":358,"wires":[]}]
 ```
 
-***Примечание: для вставки кода потока в Node-Red в правом вурхнем углу выберите пункт Import и далее пункт Clipboard. Скопируйте код в открывшееся окно и нажмите OK.***
+*Примечание: для вставки кода потока в Node-Red в правом вурхнем углу выберите пункт Import и далее пункт Clipboard. Скопируйте код в открывшееся окно и нажмите OK.*
 
 
 
@@ -130,12 +140,8 @@ CREATE TABLE "MIXED"
 ```js
     msg.payload =
     {
-        TS : 'TIMESTAMP',
-        TEMP : msg.payload.d.temp,
-        ANGLE : msg.payload.d.humidity,
-        PREDICTTEMP : null,
-        PREDICTANGLE : null
-
+        ts : 'TIMESTAMP',
+        temp : msg.payload.d.temp
     }
     return msg; 
 ```
@@ -150,6 +156,8 @@ CREATE TABLE "MIXED"
 
 Все полученные данные накапливаются в таблицах SOURCE,ANALYTHIC и MIXED. Так как время аналитической обработки зависит от объемов данных, выпролним удаление устаревших строк из таблиц. Для этого добавим следующий поток обработки, содержащий SQL скрипты
 
+
+!!!!!!!!!!!!!Обновить
 ```json
 [{"id":"ed3191e1.12ce7","type":"inject","z":"464be866.b9b418","name":"Clear table","topic":"","payload":"","payloadType":"date","repeat":"30","crontab":"","once":true,"x":319,"y":629,"wires":[["3a10c273.c5ef3e","c2da84ed.3d2578","fc00c702.03ff38"]]},{"id":"3a10c273.c5ef3e","type":"dashDB in","z":"464be866.b9b418","service":"dashDB-nx","query":"DELETE FROM SOURCE WHERE ID<=(SELECT max(ID) FROM SOURCE)-200;","params":"","name":"DLELETE OLD from SOURCE","x":607,"y":572.5,"wires":[[]]},{"id":"eb53b616.14ac48","type":"comment","z":"464be866.b9b418","name":"Удаление старых данных","info":"Удаление старых данных","x":526,"y":526,"wires":[]},{"id":"c2da84ed.3d2578","type":"dashDB in","z":"464be866.b9b418","service":"dashDB-nx","query":"DELETE FROM ANALYTHIC WHERE ID<=(SELECT max(ID) FROM ANALYTHIC)-200;","params":"","name":"DLELETE OLD from ANALYTHIC","x":614,"y":642,"wires":[[]]},{"id":"fc00c702.03ff38","type":"dashDB in","z":"464be866.b9b418","service":"dashDB-nx","query":"DELETE FROM MIXED WHERE ID<=(SELECT max(ID) FROM MIXED)-200;","params":"","name":"DLELETE OLD from MIXED","x":597,"y":710,"wires":[[]]}]
 ```
@@ -178,26 +186,50 @@ CREATE TABLE "MIXED"
 library(ibmdbR) 
 mycon <- idaConnect("BLUDB", "", "") 
 idaInit(mycon) 
-#портирование таблиц во фреймы
-temp.in <- as.data.frame(ida.data.frame('"DASH??????"."SOURCE"')[ ,c('TEMP')]) 
-angle.in <- as.data.frame(ida.data.frame('"DASH??????"."SOURCE"')[ ,c('ANGLE')]) 
-id.in <- as.data.frame(ida.data.frame('"DASH??????".""')[ ,c('ID')]) 
+#портирование таблицы TEMP во фреймы
+temp.in <- as.data.frame(ida.data.frame('"DASH??????"."TEMP"')[ ,c('temp')]) 
+id.in <- as.data.frame(ida.data.frame('"DASH??????"."TEMP"')[ ,c('ID')]) 
+ts.in <- as.data.frame(ida.data.frame('"DASH??????"."TEMP"')[ ,c('ts')])
+#Преобразование timestamp в POSIX формат
+ts.in1 <- as.data.frame(as.POSIXlt(ts.in$ts))
+colnames(ts.in1) <- c("ts")
+#Определяем интервал для предиктивного анализа
+ts.temp <- as.data.frame(max(ts.in1$ts) + 60)
+colnames(ts.temp) <- c("ts")
+ts.p <- rbind(ts.in1,ts.temp)
 #добавление id для задания предиктивных точек
-new.id <- max(id.in)+1 
+new.id <- max(id.in)+1
 id.p <- rbind(id.in,new.id)
 #для искомой переменной устанавливаем значение неопределенности NA
-temp.tmp <- temp.in 
-new.temp <- NA 
-temp.p <- rbind(temp.tmp,new.temp) 
-angle.p <- rbind(angle.in,new.temp) 
-#выполняем регрессионный анализ
-lm1 <- predict(lm(formula = temp.p$TEMP ~ id.p$ID), temp.p) 
-lm2 <- predict(lm(formula = angle.p$ANGLE ~ id.p$ID), angle.p) 
-lm1.temp<-lm1[length(lm1)] 
-lm2.temp<-lm2[length(lm2)] 
-#выполняем вставку предиктивных данных в базу данных
-query <- idaQuery("INSERT INTO ANALYTHIC (\"PREDICTTEMP\",\"PREDICTANGLE\")  VALUES (",lm1.temp,",",lm2.temp,")") 
-query <- idaQuery("INSERT INTO MIXED (\"PREDICTTEMP\",\"PREDICTANGLE\")  VALUES (",lm1.temp,",",lm2.temp,")") 
+temp.tmp <- temp.in
+new.temp <- NA
+temp.p <- rbind(temp.tmp,new.temp)
+#выполняем регрессионный анализ для датчика температуры
+lm1 <- predict(lm(formula = temp.p$temp ~ ts.p$ts), temp.p)
+lm1.temp<-lm1[length(lm1)]
+query <- idaQuery("INSERT INTO PTEMP (\"ts\",\"ptemp\")  VALUES (TIMESTAMP('",ts.temp$ts[1],"',10),",lm1.temp,")")
+#портирование таблицы ANGLE во фреймы
+angle.in <- as.data.frame(ida.data.frame('"DASH??????"."ANGLE"')[ ,c('angle')]) 
+id.in <- as.data.frame(ida.data.frame('"DASH??????"."ANGLE"')[ ,c('ID')]) 
+ts.in <- as.data.frame(ida.data.frame('"DASH??????"."ANGLE"')[ ,c('ts')])
+#Преобразование timestamp в POSIX формат
+ts.in1 <- as.data.frame(as.POSIXlt(ts.in$ts))
+colnames(ts.in1) <- c("ts")
+#Определяем интервал для предиктивного анализа
+ts.temp <- as.data.frame(max(ts.in1$ts) + 60)
+colnames(ts.temp) <- c("ts")
+ts.p <- rbind(ts.in1,ts.temp)
+#добавление id для задания предиктивных точек
+new.id <- max(id.in)+1
+id.p <- rbind(id.in,new.id)
+#для искомой переменной устанавливаем значение неопределенности NA
+angle.tmp <- angle.in
+new.temp <- NA
+angle.p <- rbind(angle.tmp,new.temp)
+#выполняем регрессионный анализ для датчика температуры
+lm1 <- predict(lm(formula = angle.p$angle ~ ts.p$ts), angle.p)
+lm1.temp<-lm1[length(lm1)]
+query <- idaQuery("INSERT INTO PANGLE (\"ts\",\"pangle\")  VALUES (TIMESTAMP('",ts.temp$ts[1],"',10),",lm1.temp,")")
 ```
 
 В указанном скрипте поле DASH?????? заменить на поле User ID (имя пользователя dashDB). Нажать Enter. 
@@ -210,7 +242,7 @@ query <- idaQuery("INSERT INTO MIXED (\"PREDICTTEMP\",\"PREDICTANGLE\")  VALUES 
 
 ![Запись скрипта](assets/analythics10.png)
 
-Также можно выполнить тестовый запуск скрипта, нажав на кнопку Submit. В результате в таблицах ANLYTHICS и MIXED будут сохранены предиктивные данные.
+Также можно выполнить тестовый запуск скрипта, нажав на кнопку Submit. В результате в таблицах PANGLE и PTEMP будут сохранены предиктивные данные.
 
 
 ###Запуск скрипта по расписанию из NodeRED
@@ -220,16 +252,18 @@ query <- idaQuery("INSERT INTO MIXED (\"PREDICTTEMP\",\"PREDICTANGLE\")  VALUES 
 
 
 ```json
-[{"id":"5dd674c.030d48c","type":"http in","z":"7f10a56e.5876ac","name":"","url":"","method":"post","swaggerDoc":"","x":190,"y":1141,"wires":[["69516dd1.18e2a4"]]},{"id":"1d3ac371.e0f9c5","type":"http response","z":"7f10a56e.5876ac","name":"console","x":842,"y":1137,"wires":[]},{"id":"69516dd1.18e2a4","type":"function","z":"7f10a56e.5876ac","name":"","func":"msg.payload = \"cmd=RScriptRunScript&command=source(%22~/predict.R%22)&fileName=&profileName=BLUDB&userid=dash??????\";\nmsg.headers = {\"content-type\": \"application/x-www-form-urlencoded\"};\nreturn msg;","outputs":1,"noerr":0,"x":404,"y":1138,"wires":[["3831ecaa.377d34"]]},{"id":"3831ecaa.377d34","type":"http request","z":"7f10a56e.5876ac","name":"R Script","method":"POST","ret":"txt","url":"https://XXXXXXXXXXXXXXXX:8443/console/blushiftservices/BluShiftHttp.do","x":616,"y":1136,"wires":[["1d3ac371.e0f9c5","863a8702.7598a8"]]},{"id":"863a8702.7598a8","type":"debug","z":"7f10a56e.5876ac","name":"","active":true,"console":"false","complete":"false","x":959,"y":1084,"wires":[]},{"id":"e3ac94d.9075168","type":"inject","z":"7f10a56e.5876ac","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":190,"y":1067.5,"wires":[["69516dd1.18e2a4"]]}]
+[{"id":"182e4cef.741a2b","type":"http response","z":"8d8674d5.c5d9a","name":"console","x":803,"y":917,"wires":[]},{"id":"240800e2.938a88","type":"function","z":"8d8674d5.c5d9a","name":"","func":"msg.payload = \"cmd=RScriptRunScript&command=source(%22~/predict.R%22)&fileName=&profileName=BLUDB&userid=dash??????\";\nmsg.headers = {\"content-type\": \"application/x-www-form-urlencoded\"};\nreturn msg;","outputs":1,"noerr":0,"x":370,"y":916,"wires":[["83dbda70.6916f8"]]},{"id":"83dbda70.6916f8","type":"http request","z":"8d8674d5.c5d9a","name":"R Script","method":"POST","ret":"txt","url":"https://XXXXXXXXXXXXXXXX:8443/console/blushiftservices/BluShiftHttp.do","x":580,"y":916,"wires":[["182e4cef.741a2b"]]},{"id":"f4590f4f.941a68","type":"inject","z":"8d8674d5.c5d9a","name":"","topic":"","payload":"","payloadType":"date","repeat":"60","crontab":"","once":false,"x":163,"y":915.5,"wires":[["240800e2.938a88"]]}]
+
 ```
+
+
 
 В данном коде необходимо заменить следующие поля:
 
 - dash?????? — User ID пользователя dashDB (например DASH015794)
-
 - XXXXXXXXXXXXXX — Host name адрес dashDB приложения (например awh-yp-small03.services.dal.bluemix.net).
 
-В блоке RScript необходимо указать значение password из настроек dashDB. Регулярность запуск задается в блоке Timestamp.
+В блоке RScript необходимо выбрать способ аутентификации ([v] Use basic authentication?), в полях Username и Password указать значения user ID и password из настроек dashDB. Интервал запуск задается в блоке Timestamp. Для этого в поле Repeat нужно указать временной интервал между генерацией сообщений (например, 20 секунд).
 
 
 ![Запуск скрипта по расписанию](assets/analythics11.png)
