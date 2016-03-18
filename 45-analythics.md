@@ -74,8 +74,8 @@
 CREATE TABLE "TEMP" 
 (
   "ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE ),
-  "temp" DOUBLE,
-  "ts" TIMESTAMP,
+  "TEMP" DOUBLE,
+  "TS" TIMESTAMP,
   PRIMARY KEY(ID)
 );
 ```
@@ -85,8 +85,8 @@ CREATE TABLE "TEMP"
 CREATE TABLE "ANGLE" 
 (
   "ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE ),
-  "angle" DOUBLE,
-  "ts" TIMESTAMP,
+  "ANGLE" DOUBLE,
+  "TS" TIMESTAMP,
   PRIMARY KEY(ID)
 );
 ```
@@ -95,8 +95,8 @@ CREATE TABLE "ANGLE"
 CREATE TABLE "PTEMP" 
 (
   "ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE ),
-  "ptemp" DOUBLE,
-  "ts" TIMESTAMP,
+  "PTEMP" DOUBLE,
+  "TS" TIMESTAMP,
   PRIMARY KEY(ID)
 );
 ```
@@ -106,8 +106,8 @@ CREATE TABLE "PTEMP"
 CREATE TABLE "PANGLE" 
 (
   "ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE ),
-  "pangle" DOUBLE,
-  "ts" TIMESTAMP,
+  "PANGLE" DOUBLE,
+  "TS" TIMESTAMP,
   PRIMARY KEY(ID)
 );
 ```
@@ -187,15 +187,15 @@ library(ibmdbR)
 mycon <- idaConnect("BLUDB", "", "") 
 idaInit(mycon) 
 #портирование таблицы TEMP во фреймы
-temp.in <- as.data.frame(ida.data.frame('"DASH??????"."TEMP"')[ ,c('temp')]) 
+temp.in <- as.data.frame(ida.data.frame('"DASH??????"."TEMP"')[ ,c('TEMP')]) 
 id.in <- as.data.frame(ida.data.frame('"DASH??????"."TEMP"')[ ,c('ID')]) 
-ts.in <- as.data.frame(ida.data.frame('"DASH??????"."TEMP"')[ ,c('ts')])
+ts.in <- as.data.frame(ida.data.frame('"DASH??????"."TEMP"')[ ,c('TS')])
 #Преобразование timestamp в POSIX формат
-ts.in1 <- as.data.frame(as.POSIXlt(ts.in$ts))
-colnames(ts.in1) <- c("ts")
+ts.in1 <- as.data.frame(as.POSIXlt(ts.in$TS))
+colnames(ts.in1) <- c("TS")
 #Определяем интервал для предиктивного анализа
-ts.temp <- as.data.frame(max(ts.in1$ts) + 60)
-colnames(ts.temp) <- c("ts")
+ts.temp <- as.data.frame(max(ts.in1$TS) + 60)
+colnames(ts.temp) <- c("TS")
 ts.p <- rbind(ts.in1,ts.temp)
 #добавление id для задания предиктивных точек
 new.id <- max(id.in)+1
@@ -205,19 +205,19 @@ temp.tmp <- temp.in
 new.temp <- NA
 temp.p <- rbind(temp.tmp,new.temp)
 #выполняем регрессионный анализ для датчика температуры
-lm1 <- predict(lm(formula = temp.p$temp ~ ts.p$ts), temp.p)
+lm1 <- predict(lm(formula = temp.p$TEMP ~ ts.p$TS), temp.p)
 lm1.temp<-lm1[length(lm1)]
-query <- idaQuery("INSERT INTO PTEMP (\"ts\",\"ptemp\")  VALUES (TIMESTAMP('",ts.temp$ts[1],"',10),",lm1.temp,")")
+query <- idaQuery("INSERT INTO PTEMP (\"TS\",\"PTEMP\")  VALUES (TIMESTAMP('",ts.temp$TS[1],"',10),",lm1.temp,")")
 #портирование таблицы ANGLE во фреймы
-angle.in <- as.data.frame(ida.data.frame('"DASH??????"."ANGLE"')[ ,c('angle')]) 
+angle.in <- as.data.frame(ida.data.frame('"DASH??????"."ANGLE"')[ ,c('ANGLE')]) 
 id.in <- as.data.frame(ida.data.frame('"DASH??????"."ANGLE"')[ ,c('ID')]) 
-ts.in <- as.data.frame(ida.data.frame('"DASH??????"."ANGLE"')[ ,c('ts')])
+ts.in <- as.data.frame(ida.data.frame('"DASH??????"."ANGLE"')[ ,c('TS')])
 #Преобразование timestamp в POSIX формат
-ts.in1 <- as.data.frame(as.POSIXlt(ts.in$ts))
-colnames(ts.in1) <- c("ts")
+ts.in1 <- as.data.frame(as.POSIXlt(ts.in$TS))
+colnames(ts.in1) <- c("TS")
 #Определяем интервал для предиктивного анализа
-ts.temp <- as.data.frame(max(ts.in1$ts) + 60)
-colnames(ts.temp) <- c("ts")
+ts.temp <- as.data.frame(max(ts.in1$TS) + 60)
+colnames(ts.temp) <- c("TS")
 ts.p <- rbind(ts.in1,ts.temp)
 #добавление id для задания предиктивных точек
 new.id <- max(id.in)+1
@@ -227,9 +227,9 @@ angle.tmp <- angle.in
 new.temp <- NA
 angle.p <- rbind(angle.tmp,new.temp)
 #выполняем регрессионный анализ для датчика температуры
-lm1 <- predict(lm(formula = angle.p$angle ~ ts.p$ts), angle.p)
+lm1 <- predict(lm(formula = angle.p$angle ~ ts.p$TS), angle.p)
 lm1.temp<-lm1[length(lm1)]
-query <- idaQuery("INSERT INTO PANGLE (\"ts\",\"pangle\")  VALUES (TIMESTAMP('",ts.temp$ts[1],"',10),",lm1.temp,")")
+query <- idaQuery("INSERT INTO PANGLE (\"TS\",\"PANGLE\")  VALUES (TIMESTAMP('",ts.temp$TS[1],"',10),",lm1.temp,")")
 ```
 
 В указанном скрипте поле DASH?????? заменить на поле User ID (имя пользователя dashDB). Нажать Enter. 
