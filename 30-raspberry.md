@@ -63,9 +63,9 @@ def receive_if_available():
 [device]
 org=md8qpm
 type=bmstu001
-id=bmstu000
+id=b827eb79051a
 auth-method=token
-auth-token=B!rA*o2Y9UKnCV?nTe
+auth-token=3BZu_drqRuAKH*K*+i
 ```
 
 Bluemix предоставляет библиотеку ibmotf — небольшую обёртку над MQTT, инициализация соединения с которой выглядит как:
@@ -76,6 +76,7 @@ def connect(config):
     options = ibmiotf.device.ParseConfigFile(config)
     client = ibmiotf.device.Client(options)
     client.connect()
+    return client
 
 client = connect('device.cfg')
 ```
@@ -96,24 +97,39 @@ def main():
         payload = receive_if_available()
         if payload:
             sid, data = payload
-            send_data(sid, data)
-        else:
-            # Если данных нет, то ждём.
-            time.sleep(0.1)
+            if 0 <= sid <= 1:
+                send_data(sid, data)
+            else:
+                time.sleep(0.1)
 ```
 
 Стоит заметить, что ждать необходимо только в отсутствии данных. Действительно, если ждать при любом исходе, то это может привести к накапливанию в буфере ненужных пакетов (полученных по ошибке) или в результате задержки на самой arduino.
 
 ### Получение данных из Bluemix
+В нашем случае нажатие на кнопку в веб-интерфейсе приведёт к гудку через динамик, подключённый к raspberry. Для работы с ним воспользуемся библиотекой `RPIO`.
+
+Сконфигурируем GPIO-порт:
+```python
+import RPIO
+
+BUZZER = 22
+RPIO.setup(BUZZER, RPIO.OUT, initial=RPIO.LOW)
+```
+
 Теперь необходимо подписаться на получение данных из Bluemix:
 ```python
 def connect(config):
     # ...
     client.commandCallback = on_message
+    return client
 
 def on_message(cmd):
     if cmd.command != 'button':
         return
+
+    RPIO.output(BUZZER, 1)
+    time.sleep(.05)
+    RPIO.output(BUZZER, 0)
 
     print cmd
 ```
