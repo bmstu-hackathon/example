@@ -35,20 +35,25 @@ def decode(packet):
 # MQTT client.
 #
 import ibmiotf.device
+import RPIO
 
 def connect(config):
     options = ibmiotf.device.ParseConfigFile(config)
     client = ibmiotf.device.Client(options)
     client.connect()
     client.commandCallback = on_message
+    return client
 
-client = connect('device.cfg')
+BUZZER = 22
+RPIO.setup(BUZZER, RPIO.OUT, initial=RPIO.LOW)
 
 def on_message(cmd):
     if cmd.command != 'button':
         return
 
-    print cmd
+    RPIO.output(BUZZER, 1)
+    time.sleep(.05)
+    RPIO.output(BUZZER, 0)
 
 sid_to_topic = ['temperature', 'angle']
 
@@ -56,14 +61,15 @@ def send_data(sid, data):
     topic = sid_to_topic[sid]
     client.publishEvent(topic, 'json', data)
 
+client = connect('device.cfg')
+
 def main():
     while True:
         payload = receive_if_available()
         if payload:
             sid, data = payload
-            if not 0 <= sid <= 1:
-                print sid, data, payload
-            send_data(sid, data)
+            if 0 <= sid <= 1:
+                send_data(sid, data)
         else:
             time.sleep(0.1)
 
