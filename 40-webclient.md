@@ -7,7 +7,7 @@
 
 Теперь вход в приложение может быть осуществлён по адресу [http://example-hack.eu-gb.mybluemix.net/index.html](http://example-hack.eu-gb.mybluemix.net/index.html).
 
-Содержимое `index.html` и `index.js` подробно рассматривается в следующем разделе. Полный код: [index.html](src/index.html) и [index.js](src/index.js).
+Содержимое `index.html` и `index.js` подробно рассматривается в следующем разделе. Полный код: [index.html](src/index.html) и [index.js](src/index.js). Полный исходник всех потоков доступен [здесь](src/flows.json).
 
 Теперь нам необходимо настроить взаимодействие с raspberry, т.е. получение и отправку данных. Для этого используется node-red узлы `input/ibmiot` и `output/ibmiot`:
 

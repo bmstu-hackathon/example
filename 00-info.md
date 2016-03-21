@@ -3,17 +3,6 @@
 [Репозиторий](https://github.com/bmstu-hackathon/example) |
 [Организация](https://github.com/bmstu-hackathon)
 
-## План выполнения:
-
-- [x] Эта информация
-- [ ] Введение
-- [ ] Arduino
-- [ ] Raspberry
-- [ ] Обработка и визуализация
-- [ ] Аналитическая обработка
-- [ ] Сборка проекта
-- [ ] Задание на хакатон
-
 ## Markdown
 
 Общая информация [здесь](https://guides.github.com/features/mastering-markdown/).
