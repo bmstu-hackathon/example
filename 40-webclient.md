@@ -9,7 +9,7 @@
 ![](assets/static-server.png)
 **Статический сервер.**
 
-Теперь вход в приложение может быть осуществлён по адресу http://YOU_PROOJECT_NAME.eu-gb.mybluemix.net/index.html (например, [http://example-hack.eu-gb.mybluemix.net/index.html](http://example-hack.eu-gb.mybluemix.net/index.html)).
+Теперь вход в приложение может быть осуществлён по адресу http://YOU_PROJECT_NAME.eu-gb.mybluemix.net/index.html (например, [http://example-hack.eu-gb.mybluemix.net/index.html](http://example-hack.eu-gb.mybluemix.net/index.html)).
 
 Содержимое `index.html` и `index.js` подробно рассматривается в следующем разделе. Полный код: [index.html](src/index.html) и [index.js](src/index.js). Полный исходник всех потоков доступен [здесь](src/flows.json).
 
