@@ -28,12 +28,12 @@
 
 Узел трансформации `transform` просто преобразует данные для пересылки клиенту:
 ```javascript
-return {
-  payload: {
-    topic: msg.eventType,
-    data: msg.payload
-  }
+msg.payload = {
+    TIME: Date.now(),
+    TEMP: msg.payload
 };
+
+return msg;
 ```
 
 ### Клиент <a name="36"></a>
