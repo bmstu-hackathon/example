@@ -135,7 +135,7 @@ library(ibmdbR)
 mycon <- idaConnect("BLUDB", "", "")
 idaInit(mycon)
 
-# Загрузить данные из таблицы.
+# Загрузить данные из таблицы (запись данных в таблицу осуществляется также SQL запросом).
 data <- idaQuery('SELECT TIME, TEMP from TEMP', as.is = FALSE)
 fit <- lm(TEMP ~ TIME, data)
 
@@ -144,6 +144,7 @@ new <- data.frame(TIME = max(data$TIME) + 60000)
 new$TEMP = predict(fit, new)
 
 cat(new$TEMP)
+
 ```
 
 В результате скрипт будет выполнен, а все использованные фреймы могут быть проанализированы на вкладке Environment.
