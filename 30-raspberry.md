@@ -57,7 +57,7 @@ def receive_if_available():
 
 ###Создание приложения в *Bluemix* <a name="31"></a>
 
-Перейти по ссылке: https://bluemix.net/. Введите Ваш логин и пароль. Перейдите в раздел DASHBOARD. При необходимости создайте новую организацию (например, `dev`).
+Перейти по ссылке: https://bluemix.net/. Введите Ваш логин и пароль. Перейдите в раздел DASHBOARD. При необходимости создайте новое рабочнее пространство (например, `dev`).
 ![](assets/bluemix03.png)
 
 Перейдите в раздел CATALOG.
@@ -66,7 +66,7 @@ def receive_if_available():
 **Рабочее поле Bluemix.**
 
 Добавьте в проект компонент Internet of Things Foundation Starter. ![](assets/bluemix02.png)
-В результате буду добавлены приложение SDK for Node.js  и сервисы Cloudant NoSQL DB и IoT Foundation.
+В результате буду добавлены приложение SDK for Node.js  и сервис Cloudant NoSQL DB.
 
 
 После этого добавьте в проект сервис IoT Foundation. ![](assets/bluemix04.png)
@@ -75,8 +75,7 @@ def receive_if_available():
 
 Сервис IoT Foudation является интегрированным компонентом на основе брокера MQTT запросов. 
 Для его использования необходимо выполнить конфигурацию брокера на прием пакетов от RaspberriPi.
-Создадим описание нового устройства.
-В результате ваш проект будет иметь следующий вид.
+Создадим описание нового устройства. В результате ваш проект будет иметь следующий вид.
 
 ![](assets/bluemix05.png)
 **Рабочее поле Bluemix после довбавление IoT Foundation и IoT Foundation Starter.**
