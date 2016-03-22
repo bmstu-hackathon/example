@@ -3,6 +3,7 @@
 ### Описание оборудования лаборатории Интернета вещей <a name="50"></a>
 
 
+
 Датчик | Краткое описание | Варианты применения | Ссылка на документацию | Картинка
 ------------ | ------------- | ------------- | ------------- | -------------
 Датчик газа|Датчик определяет присутствие сжиженного нефтяного газа, природного газа, газа в угольных пластах|Детектор утечки газа|http://www.waveshare.com/wiki/MQ-5_Gas_Sensor| ![](http://www.waveshare.com/w/thumb.php?f=MQ-5-Gas-Sensor_l.jpg&width=300)
@@ -69,6 +70,5 @@
 Датчика звука KY-038|Плата с маленьким микрофоном, имеет 2 выхода: цифровой и аналоговый AO, аналоговый выход – сигнал напрямую с микрофона DO, цифровой выход – при превышении порога срабатывания на выходе 1. Чувствительность срабатывания регулируется подстроечным Резистором На плате два светодиода – один при подаче питания, второй при срабатывании цифрового выхода|Обнаружение звука|https://tkkrlab.nl/wiki/Arduino_KY-038_Microphone_sound_sensor_module|![](https://tkkrlab.nl/w/images/thumb/a/a3/Arduino_KY-038_Microphone_sound_sensor_module_Sku_135533_1.jpg/400px-Arduino_KY-038_Microphone_sound_sensor_module_Sku_135533_1.jpg)
 Лазерный модуль KY-008|Параметры: 30 mA при 5 V Подключение пин — = GND Pin = 5V|Излучает лазерный луч|https://tkkrlab.nl/wiki/Arduino_KY-008_Laser_sensor_module|![](https://tkkrlab.nl/w/images/thumb/f/f3/Arduino_KY-008_Laser_sensor_module_Sku_137473.jpg/400px-Arduino_KY-008_Laser_sensor_module_Sku_137473.jpg)
 Реле KY-019|Используется для коммутации нагрузки с большим напряжением или током. Например лампы|Преобразование напрежение и тока|https://tkkrlab.nl/wiki/Arduino_KY-019_5V_relay_module|![](https://tkkrlab.nl/w/images/thumb/c/c1/Arduino_KY-019_5V_relay_module_Sku_121354_1.jpg/400px-Arduino_KY-019_5V_relay_module_Sku_121354_1.jpg)
-Джойстик KY-023|Двухосевой аналоговый джойстик с кнопкой|Для управления|https://tkkrlab.nl/wiki/Arduino_KY-023_XY-axis_joystick_module|![](https://tkkrlab.nl/w/images/thumb/a/a4/Arduino_KY-023_XY-axis_joystick_module_Sku_121340_3.jpg/400px-Arduino_KY-023_XY-axis_joystick_module_Sku_121340_3.jpg
-)
+Джойстик KY-023|Двухосевой аналоговый джойстик с кнопкой|Для управления|https://tkkrlab.nl/wiki/Arduino_KY-023_XY-axis_joystick_module|![](https://tkkrlab.nl/w/images/thumb/a/a4/Arduino_KY-023_XY-axis_joystick_module_Sku_121340_3.jpg/400px-Arduino_KY-023_XY-axis_joystick_module_Sku_121340_3.jpg)
 
