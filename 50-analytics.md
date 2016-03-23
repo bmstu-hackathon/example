@@ -90,8 +90,9 @@ CREATE TABLE TEMP (
 ```js
 msg.payload = {
   TIME: Date.now(),
-  TEMP: msg.payload.d.temp
-}
+  TEMP: msg.payload
+};
+
 return msg;
 ```
 
