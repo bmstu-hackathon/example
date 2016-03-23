@@ -29,8 +29,8 @@
 Узел трансформации `transform` просто преобразует данные для пересылки клиенту:
 ```javascript
 msg.payload = {
-    TIME: Date.now(),
-    TEMP: msg.payload
+    topic: msg.eventType,
+    data: msg.payload
 };
 
 return msg;
